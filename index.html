@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Profil Resmi dan Portal Informasi Wisata Religi Masjid Raya Sheikh Zayed Surakarta. Menampilkan jadwal sholat real-time, arah kiblat, virtual tour fasilitas, kalkulator zakat, infaq QRIS, dan panduan kunjungan jamaah.">
+    <meta name="keywords" content="Masjid Sheikh Zayed Solo, Masjid Raya Sheikh Zayed Surakarta, Jadwal Sholat Solo, Wisata Religi Solo, Arsitektur Masjid Sheikh Zayed">
+    <meta name="author" content="Badan Pengelola Masjid Raya Sheikh Zayed Surakarta">
+    
+    <title>Profil Resmi Masjid Raya Sheikh Zayed Surakarta | Ikon Megah Solo</title>
+    
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230284c7' d='M256 0c-25.3 0-47.8 11.8-62.4 30C157.9 22.8 113.6 44 80 84.8V48c0-8.8-7.2-16-16-16H32c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-8.6c24.4-23.7 54.3-37.4 86.4-37.4 8.7 0 17.3 1 25.6 2.9C192 119.3 192 143.1 192 160v32h-32c-17.7 0-32 14.3-32 32v256c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32h-32v-32c0-16.9 0-40.7 2-61.1 8.3-1.9 16.9-2.9 25.6-2.9 32.1 0 62 13.7 86.4 37.4V144c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v36.8c-33.6-40.8-77.9-62-113.6-54.8C303.8 11.8 281.3 0 256 0z'/></svg>">
+
+    <!-- Google Fonts: Plus Jakarta Sans, Amiri (Arabic), Cinzel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6.5 Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN with Custom Plugins and Dark Mode -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fbf8eb',
+                            100: '#f5eece',
+                            200: '#ebdc9d',
+                            300: '#dec466',
+                            400: '#d1ab38',
+                            500: '#c59a22',
+                            600: '#a87a19',
+                            700: '#835917',
+                            800: '#6d481a',
+                            900: '#5c3d1b',
+                        },
+                        navy: {
+                            800: '#0c1a2e',
+                            900: '#07101e',
+                            950: '#040914'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                        display: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Bespoke CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-sky-50 dark:bg-navy-950 text-slate-800 dark:text-slate-100 font-sans antialiased selection:bg-sky-500 selection:text-white transition-colors duration-300">
+
+    <!-- Canvas Confetti untuk Kuis -->
+    <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[99998] hidden"></canvas>
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="bg-slate-900/95 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-sky-400/40 backdrop-blur-md flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center flex-shrink-0 text-sm">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+        <p id="toast-message" class="text-xs sm:text-sm font-medium leading-snug"></p>
+    </div>
+
+    <!-- 1. LOADER RESMI MASJID -->
+    <div id="loader">
+        <div class="loader-ornament">
+            <div class="loader-ring"></div>
+            <i class="fa-solid fa-mosque loader-icon"></i>
+        </div>
+        <div class="text-center space-y-1">
+            <span class="font-arabic text-2xl text-amber-300 block">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+            <span class="text-xs tracking-widest uppercase font-semibold text-sky-200 block">Masjid Raya Sheikh Zayed Surakarta</span>
+        </div>
+    </div>
+
+    <!-- 2. SCROLL PROGRESS BAR -->
+    <div id="progress"></div>
+
+    <!-- 3. TOP NOTIFICATION BAR & AKSESIBILITAS -->
+    <div class="bg-gradient-to-r from-navy-900 via-sky-950 to-navy-900 text-slate-200 text-xs py-2 px-4 border-b border-sky-900/40 hidden sm:block">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center text-amber-300">
+                    <i class="fa-regular fa-moon mr-1.5"></i>
+                    <span id="live-hijri">14 Jumadil Awwal 1448 H</span>
+                </span>
+                <span class="text-slate-500">|</span>
+                <span class="inline-flex items-center text-sky-300">
+                    <i class="fa-regular fa-clock mr-1.5"></i>
+                    <span id="live-clock">--:--:-- WIB</span>
+                </span>
+                <span class="text-slate-500">|</span>
+                <span class="inline-flex items-center text-emerald-400">
+                    <i class="fa-solid fa-circle-check mr-1.5 text-[10px]"></i> Buka: 03.00 - 21.00 WIB
+                </span>
+            </div>
+            
+            <!-- Quick Tools Toolbar -->
+            <div class="flex items-center space-x-3">
+                <!-- Audio Ambient Player -->
+                <button id="audio-toggle-btn" onclick="toggleAmbientAudio()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition text-slate-200 text-xs border border-white/10" title="Putar Suasana Spiritual">
+                    <div id="audio-indicator" class="sound-wave audio-muted">
+                        <span class="sound-bar"></span>
+                        <span class="sound-bar"></span>
+                        <span class="sound-bar"></span>
+                        <span class="sound-bar"></span>
+                    </div>
+                    <span class="hidden md:inline">Suasana: Hening</span>
+                </button>
+
+                <!-- Font Size Adjuster -->
+                <div class="inline-flex items-center bg-white/10 rounded-lg p-0.5 border border-white/10">
+                    <button onclick="adjustFontSize(-1)" class="px-2 py-0.5 hover:text-sky-300 font-bold" title="Kecilkan Teks">A-</button>
+                    <button onclick="adjustFontSize(1)" class="px-2 py-0.5 hover:text-sky-300 font-bold" title="Besarkan Teks">A+</button>
+                </div>
+
+                <!-- Dark / Light Mode Switcher -->
+                <button onclick="toggleDarkMode()" class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition text-slate-200" title="Ubah Tema Malam/Siang">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-amber-300"></i>
+                </button>
+
+                <!-- Multi-Language Switcher -->
+                <div class="inline-flex items-center space-x-1 font-semibold text-[11px]">
+                    <button onclick="switchLanguage('id')" class="hover:text-amber-300 transition px-1">ID</button>
+                    <span class="text-slate-500">/</span>
+                    <button onclick="switchLanguage('en')" class="hover:text-amber-300 transition px-1">EN</button>
+                    <span class="text-slate-500">/</span>
+                    <button onclick="switchLanguage('ar')" class="hover:text-amber-300 transition px-1">العربية</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. HEADER & NAVBAR RESMI -->
+    <header class="fixed top-0 sm:top-8 left-0 right-0 z-50 bg-white/90 dark:bg-navy-900/90 backdrop-blur-md shadow-sm border-b border-sky-100 dark:border-slate-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Identitas Masjid -->
+                <a href="#beranda" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-sky-600 to-sky-400 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-sky-200 dark:shadow-sky-900/40 group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-mosque text-2xl text-amber-200"></i>
+                    </div>
+                    <div>
+                        <span id="nav-brand-title" class="block font-bold text-lg text-slate-900 dark:text-white leading-tight">Sheikh Zayed</span>
+                        <span id="nav-brand-city" class="block text-xs text-sky-600 dark:text-sky-400 font-semibold tracking-wider uppercase">Solo Surakarta</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden xl:flex items-center space-x-5 font-semibold text-xs tracking-wide text-slate-600 dark:text-slate-300">
+                    <a href="#beranda" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Beranda</a>
+                    <a href="#sholat" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Jadwal Sholat</a>
+                    <a href="#jelajah" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Jelajah 3D</a>
+                    <a href="#tentang" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Tentang</a>
+                    <a href="#arsitektur" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Arsitektur</a>
+                    <a href="#fasilitas" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Fasilitas</a>
+                    <a href="#zakat" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Zakat & Infaq</a>
+                    <a href="#lokasi" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Lokasi</a>
+                    <a href="#kegiatan" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Kegiatan</a>
+                    <a href="#galeri" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Galeri</a>
+                    <a href="#kontak" class="hover:text-sky-600 dark:hover:text-sky-400 transition">Kontak</a>
+                </nav>
+
+                <!-- Quick Action Buttons -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="#sholat" class="bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-sky-500/20 transition transform hover:-translate-y-0.5 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-kaaba text-amber-300"></i>
+                        <span>Kiblat & Sholat</span>
+                    </a>
+                    <a href="#zakat" class="gold-badge font-semibold px-4 py-2.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5 text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <span>Infaq QRIS</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Hamburger Button -->
+                <div class="xl:hidden flex items-center space-x-2">
+                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button id="menu-btn" class="text-slate-700 dark:text-slate-200 hover:text-sky-600 p-2 focus:outline-none" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars-staggered text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden xl:hidden bg-white dark:bg-navy-900 border-b border-sky-100 dark:border-slate-800 px-4 pt-4 pb-6 space-y-2 shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 text-xs">
+                <span class="text-slate-500 dark:text-slate-400">Pilih Bahasa:</span>
+                <div class="space-x-3 font-bold text-sky-600 dark:text-sky-400">
+                    <button onclick="switchLanguage('id')">Indonesia</button>
+                    <button onclick="switchLanguage('en')">English</button>
+                    <button onclick="switchLanguage('ar')">العربية</button>
+                </div>
+            </div>
+            <a href="#beranda" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Beranda</a>
+            <a href="#sholat" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Jadwal Sholat & Kiblat</a>
+            <a href="#jelajah" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Jelajah 3D</a>
+            <a href="#tentang" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Tentang & Sejarah</a>
+            <a href="#arsitektur" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Arsitektur & Seni</a>
+            <a href="#fasilitas" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Fasilitas Masjid</a>
+            <a href="#etika" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Tata Tertib Kunjungan</a>
+            <a href="#zakat" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Kalkulator Zakat & QRIS</a>
+            <a href="#lokasi" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Lokasi & Rute</a>
+            <a href="#kegiatan" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Kegiatan & Kajian</a>
+            <a href="#kuis" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Kuis Sahabat Masjid</a>
+            <a href="#galeri" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Galeri Foto</a>
+            <a href="#kontak" class="mobile-link block px-4 py-2.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-sky-50 dark:hover:bg-slate-800 font-semibold text-sm">Kontak & Aspirasi</a>
+        </div>
+    </header>
+
+    <!-- 5. HERO SECTION (PARALLAX 3D + TYPOGRAPHY) -->
+    <section id="beranda" class="hero pt-16 sm:pt-24">
+        <img src="masjidepan.jpg" alt="Masjid Sheikh Zayed Solo" class="hero-bg" data-hero="bg">
+        <div class="hero-shade"></div>
+        <span class="orb orb1" data-hero="orb"></span>
+        <span class="orb orb2" data-hero="orb"></span>
+        <div class="hero-title" aria-hidden="true">SHEIKH ZAYED</div>
+        
+        <div class="hero-content" data-hero="content">
+            <div class="rise inline-flex items-center space-x-2 bg-white/10 dark:bg-slate-900/60 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase border border-white/20 mb-3" style="--d:0s">
+                <i class="fa-solid fa-star text-amber-300"></i>
+                <span id="hero-badge-text">Ikon Kebanggaan Surakarta</span>
+            </div>
+            
+            <p class="font-arabic text-2xl sm:text-3xl text-amber-300/90 mb-2 drop-shadow">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+            
+            <h1 id="hero-main-title" class="rise text-3xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight drop-shadow-md" style="--d:.15s">
+                Masjid Raya Sheikh Zayed Solo
+            </h1>
+            
+            <p id="hero-main-desc" class="rise text-slate-200 mt-4 leading-relaxed text-sm sm:text-base max-w-2xl mx-auto drop-shadow" style="--d:.3s">
+                Simbol keharmonisan bilateral Indonesia dan Uni Emirat Arab, pusat dakwah Islam yang moderat, serta destinasi wisata religi termegah di Kota Solo.
+            </p>
+            
+            <div class="rise flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-8" style="--d:.45s">
+                <a href="#sholat" class="w-full sm:w-auto bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold px-7 py-3.5 rounded-xl shadow-xl shadow-sky-900/40 transition transform hover:-translate-y-0.5 text-center text-sm flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>Cek Jadwal Sholat</span>
+                </a>
+                <a href="#jelajah" class="w-full sm:w-auto bg-white/15 hover:bg-white/25 backdrop-blur text-white font-bold px-7 py-3.5 rounded-xl border border-white/30 transition text-center text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Jelajahi Profil</span>
+                </a>
+                <a href="#zakat" class="w-full sm:w-auto gold-badge font-bold px-7 py-3.5 rounded-xl shadow-xl transition text-center text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Infaq Online</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="scroll-hint" aria-hidden="true"></div>
+    </section>
+
+    <!-- 6. WIDGET REAL-TIME: JADWAL SHOLAT OTOMATIS & COUNTDOWN -->
+    <section id="sholat" class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
+        <div class="bg-white/95 dark:bg-navy-900/95 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-2xl border border-sky-100 dark:border-slate-800">
+            <!-- Header Jadwal Sholat -->
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-sky-500 to-sky-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-sky-500/30 flex-shrink-0">
+                        <i class="fa-solid fa-kaaba text-amber-300"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">Waktu Sholat Surakarta & Sekitarnya</span>
+                            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full animate-pulse">LIVE AKTIF</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">Jadwal Sholat Fardhu Hari Ini</h2>
+                    </div>
+                </div>
+
+                <!-- Countdown Timer ke Sholat Berikutnya -->
+                <div class="bg-sky-50 dark:bg-slate-800/80 px-5 py-3 rounded-2xl border border-sky-100 dark:border-slate-700 flex items-center space-x-4 w-full lg:w-auto justify-between lg:justify-start">
+                    <div>
+                        <span id="next-prayer-name" class="block text-xs font-semibold text-slate-500 dark:text-slate-400">Menuju Waktu Sholat</span>
+                        <span id="prayer-countdown" class="block text-2xl font-mono font-extrabold text-sky-600 dark:text-sky-400">--:--:--</span>
+                    </div>
+                    <button onclick="playIslamicChime()" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition shadow text-xs flex items-center gap-1.5" title="Dengarkan Nada Pengingat">
+                        <i class="fa-solid fa-volume-high"></i>
+                        <span class="hidden sm:inline">Tes Adzan</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kartu 7 Waktu Sholat -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5 mt-6">
+                <!-- Imsak -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Imsak">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Imsak</span>
+                    <i class="fa-solid fa-moon text-sky-500 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">03:45</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Subuh -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Subuh">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Subuh</span>
+                    <i class="fa-solid fa-cloud-sun text-sky-500 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">03:55</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Terbit / Syuruq -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Terbit">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Terbit</span>
+                    <i class="fa-regular fa-sun text-amber-500 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">05:15</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Dzuhur -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Dzuhur">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Dzuhur</span>
+                    <i class="fa-solid fa-sun text-amber-400 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">11:32</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Ashar -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Ashar">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Ashar</span>
+                    <i class="fa-solid fa-cloud-sun text-amber-500 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">14:54</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Maghrib -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Maghrib">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Maghrib</span>
+                    <i class="fa-solid fa-mountain-sun text-rose-500 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">17:46</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+                <!-- Isya -->
+                <div class="prayer-card bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center" data-prayer="Isya">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-1">Isya</span>
+                    <i class="fa-solid fa-star-and-crescent text-indigo-400 text-lg mb-2 block"></i>
+                    <h4 class="text-xl font-bold font-mono text-slate-900 dark:text-white">18:59</h4>
+                    <span class="text-[10px] text-slate-400 block mt-1">WIB</span>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
+                <span><i class="fa-solid fa-location-crosshairs mr-1 text-sky-500"></i> Koordinat: 7°33'09" LS, 110°49'30" BT (Ketinggian: 105 mdpl)</span>
+                <span>Standar Perhitungan: Kementerian Agama Republik Indonesia (Kemenag RI)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. STAGE "JELAJAH 3D" (SCROLL EXPERIENCE SEPERTI DI AWWWARDS) -->
+    <section id="jelajah" class="stage-wrap mt-16">
+        <div class="stage">
+            <div class="scene">
+                <img src="eksteriormasjid.jpg" alt="Eksterior masjid saat senja">
+                <div class="scene-text">
+                    <span class="chip"><i class="fa-solid fa-layer-group"></i> Bab 01</span>
+                    <h2>Kemegahan Eksterior</h2>
+                    <p>82 kubah bergaya Timur Tengah dan 4 menara setinggi 75 meter menjulang mewarnai cakrawala Kota Solo, bersinar memukau saat senja temaram.</p>
+                </div>
+            </div>
+            <div class="scene">
+                <img src="masjid.jpg" alt="Menara putih masjid">
+                <div class="scene-text">
+                    <span class="chip"><i class="fa-solid fa-gem"></i> Bab 02</span>
+                    <h2>Marmer Putih Berkilau</h2>
+                    <p>Dibangun dari marmer murni berkualitas tinggi Italia sebagai replika Sheikh Zayed Grand Mosque Abu Dhabi, hadiah istimewa penuh cinta untuk bangsa Indonesia.</p>
+                </div>
+            </div>
+            <div class="scene">
+                <img src="interiormasjid.jpg" alt="Interior masjid">
+                <div class="scene-text">
+                    <span class="chip"><i class="fa-solid fa-palette"></i> Bab 03</span>
+                    <h2>Interior &amp; Sentuhan Batik</h2>
+                    <p>Karpet tenun lembut bermotif Batik khas Surakarta dan pilar-pilar berhias ukiran kaligrafi emas 24 karat menyambut hingga 10.000+ jamaah dengan ketenteraman.</p>
+                </div>
+            </div>
+            <div class="dots">
+                <span class="dot active" title="Bab 01: Eksterior"></span>
+                <span class="dot" title="Bab 02: Marmer Putih"></span>
+                <span class="dot" title="Bab 03: Interior & Batik"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. STATISTIK & KEUNGGULAN UTAMA (3D TILT CARDS) -->
+    <section class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="tilt-card bg-white dark:bg-navy-900 p-6 rounded-2xl shadow-xl shadow-sky-900/5 dark:shadow-none border border-sky-100 dark:border-slate-800 flex items-center space-x-4">
+                <div class="w-14 h-14 bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-300 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">10.000+</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Kapasitas Jamaah</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Ruang utama & pelataran sahn</p>
+                </div>
+            </div>
+
+            <div class="tilt-card bg-white dark:bg-navy-900 p-6 rounded-2xl shadow-xl shadow-sky-900/5 dark:shadow-none border border-sky-100 dark:border-slate-800 flex items-center space-x-4">
+                <div class="w-14 h-14 bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0">
+                    <i class="fa-solid fa-mosque"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">82 Kubah</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Gaya Timur Tengah</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Marmer putih murni Italia</p>
+                </div>
+            </div>
+
+            <div class="tilt-card bg-white dark:bg-navy-900 p-6 rounded-2xl shadow-xl shadow-sky-900/5 dark:shadow-none border border-sky-100 dark:border-slate-800 flex items-center space-x-4">
+                <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0">
+                    <i class="fa-solid fa-monument"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">4 Menara</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Menjulang 75 Meter</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Landmark megah Surakarta</p>
+                </div>
+            </div>
+
+            <div class="tilt-card bg-white dark:bg-navy-900 p-6 rounded-2xl shadow-xl shadow-sky-900/5 dark:shadow-none border border-sky-100 dark:border-slate-800 flex items-center space-x-4">
+                <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">3 Hektar</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">Kawasan Terpadu</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Masjid & Islamic Center Solo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. TENTANG & SEJARAH SECTION -->
+    <section id="tentang" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                Sejarah & Filosofi Persahabatan
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                Hadiah Istimewa untuk Bangsa Indonesia
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base leading-relaxed">
+                Masjid Raya Sheikh Zayed Surakarta merupakan miniatur autentik dari Sheikh Zayed Grand Mosque di Abu Dhabi, Uni Emirat Arab (UEA), yang dihibahkan sebagai simbol persaudaraan abadi antar bangsa.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <!-- Hadith Quote Card -->
+                <div class="p-6 rounded-3xl bg-gradient-to-br from-sky-500/10 to-amber-500/10 border border-sky-200 dark:border-slate-700">
+                    <p class="font-arabic text-xl sm:text-2xl text-amber-600 dark:text-amber-300 leading-loose text-right">
+                        مَنْ بَنَى مَسْجِدًا لِلَّهِ بَنَى اللَّهُ لَهُ فِي الْجَنَّةِ مِثْلَهُ
+                    </p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 italic mt-3">
+                        "Barangsiapa membangun masjid karena Allah, niscaya Allah akan membangunkan untuknya rumah yang serupa di surga." (HR. Bukhari no. 450 & Muslim no. 533)
+                    </p>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-1 font-extrabold shadow-md">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Simbol Diplomasi & Keharmonisan Bilateral</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mt-1 leading-relaxed">
+                            Dibangun atas inisiatif persahabatan antara Presiden Republik Indonesia Joko Widodo dan Presiden UEA Sheikh Mohamed bin Zayed Al Nahyan (MBZ).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-1 font-extrabold shadow-md">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Pusat Dakwah Moderat & Islamic Center</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mt-1 leading-relaxed">
+                            Dilengkapi gedung Islamic Center megah untuk pendidikan Al-Qur'an, kajian internasional, perpustakaan digital, serta penguatan Islam Rahmatan Lil 'Alamin.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-sky-600 text-white flex items-center justify-center flex-shrink-0 mt-1 font-extrabold shadow-md">
+                        3
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Magnet Pariwisata Religi Dunia</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mt-1 leading-relaxed">
+                            Menjadi episentrum wisata religi di Jawa Tengah yang menyambut jutaan wisatawan domestik maupun mancanegara setiap tahunnya.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 bg-sky-100 dark:bg-slate-800 group">
+                <img src="tentangmasjid.jpg" alt="Tentang Masjid Sheikh Zayed" class="parallax-img w-full h-[480px] object-cover group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex items-end p-8">
+                    <div class="text-white">
+                        <span class="gold-badge text-xs font-bold px-3 py-1 rounded-full uppercase">Kawasan Gilingan, Surakarta</span>
+                        <h4 class="text-xl font-bold mt-2">Diresmikan Bersama pada 14 November 2022</h4>
+                        <p class="text-xs text-slate-300 mt-1">Oleh Presiden Joko Widodo & Presiden Sheikh Mohamed bin Zayed Al Nahyan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. ARSITEKTUR & AKULTURASI BUDAYA SECTION -->
+    <section id="arsitektur" class="py-24 bg-white dark:bg-navy-900 border-y border-sky-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                    Keunggulan Desain & Nilai Seni
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                    Harmoni Arsitektur Islam & Tradisi Budaya Jawa
+                </h2>
+                <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                    Memadukan kemegahan arsitektur khas Uni Emirat Arab dengan kearifan lokal Nusantara, terpatri indah pada ornamen kaligrafi dan karpet Batik khas Surakarta.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-sky-500 to-sky-600 text-white rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-md shadow-sky-500/20">
+                        <i class="fa-solid fa-monument"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">82 Kubah & 4 Menara 75M</h3>
+                    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        Kubah utama dilapisi marmer putih berkilau yang memantulkan sinar matahari di siang hari dan diterangi pencahayaan LED spektakuler pada malam hari.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 to-amber-600 text-white rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-md shadow-amber-500/20">
+                        <i class="fa-solid fa-scroll"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Sentuhan Ornamen Batik Solo</h3>
+                    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        Karpet ruang sholat utama ditenun khusus dengan motif Batik Kawung dan Parang, lambang kesucian, keadilan, dan keteguhan spiritual masyarakat Jawa.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-emerald-500 to-emerald-600 text-white rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-md shadow-emerald-500/20">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Material Marmer Premium</h3>
+                    <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        Menggunakan marmer impor pilihan dari Italia dan ukiran kaligrafi Asmaul Husna yang dikerjakan oleh para seniman kaligrafi ahli berpengalaman.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. SPOT FASILITAS INTERAKTIF & VIRTUAL TOUR -->
+    <section id="fasilitas" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                Eksplorasi Fasilitas Lengkap
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                Jelajahi Sudut & Fasilitas Masjid Sheikh Zayed
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                Klik salah satu fasilitas di bawah ini untuk melihat detail foto, kapasitas, dan spesifikasi kemegahan masjid.
+            </p>
+        </div>
+
+        <!-- Facility Category Switcher Buttons -->
+        <div class="flex flex-wrap justify-center gap-2.5 mb-10">
+            <button onclick="selectFacilitySpot('sholat', this)" class="facility-btn bg-sky-500 text-white shadow-md px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-kaaba"></i> Ruang Sholat Utama
+            </button>
+            <button onclick="selectFacilitySpot('kubah', this)" class="facility-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-monument"></i> 82 Kubah & Menara
+            </button>
+            <button onclick="selectFacilitySpot('taman', this)" class="facility-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-water"></i> Taman & Air Mancur
+            </button>
+            <button onclick="selectFacilitySpot('islamic-center', this)" class="facility-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-book-quran"></i> Islamic Center
+            </button>
+            <button onclick="selectFacilitySpot('difabel', this)" class="facility-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-wheelchair"></i> Ramah Difabel
+            </button>
+        </div>
+
+        <!-- Detail Container Fasilitas -->
+        <div id="facility-detail-container" class="bg-white dark:bg-navy-900 p-8 rounded-3xl shadow-xl border border-sky-100 dark:border-slate-800">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-700 group h-[360px]">
+                    <img src="interiormasjid.jpg" alt="Ruang Sholat Utama" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent flex items-end p-6">
+                        <span class="gold-badge text-xs font-bold px-3 py-1 rounded-full">Kapasitas 4.000 Jamaah</span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <span class="text-xs font-bold tracking-widest text-sky-600 dark:text-sky-400 uppercase">Jelajah Fasilitas</span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Ruang Sholat Utama & Mihrab Emas</h3>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                        Lantai marmer Italia berlapis karpet tebal bermotif Batik khas Surakarta. Dinding mihrab dihiasi kaligrafi Asmaul Husna berlapis emas 24 karat yang memancarkan ketenteraman spiritual saat beribadah.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-sky-50 dark:bg-slate-800 p-2.5 rounded-xl border border-sky-100 dark:border-slate-700">
+                            <i class="fa-solid fa-circle-check text-sky-500"></i>
+                            <span>Luas Ruang: 2.500 m²</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-sky-50 dark:bg-slate-800 p-2.5 rounded-xl border border-sky-100 dark:border-slate-700">
+                            <i class="fa-solid fa-circle-check text-sky-500"></i>
+                            <span>Sistem Pendingin AC Sentral</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-sky-50 dark:bg-slate-800 p-2.5 rounded-xl border border-sky-100 dark:border-slate-700">
+                            <i class="fa-solid fa-circle-check text-sky-500"></i>
+                            <span>Mihrab Emas Abu Dhabi</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-sky-50 dark:bg-slate-800 p-2.5 rounded-xl border border-sky-100 dark:border-slate-700">
+                            <i class="fa-solid fa-circle-check text-sky-500"></i>
+                            <span>Akustik Audio Jernih</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. KOMPAS ARAH KIBLAT & JARAK KE KA'BAH -->
+    <section class="py-20 bg-sky-50/70 dark:bg-navy-900/60 border-y border-sky-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                        Penunjuk Arah Sholat
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                        Arah Kiblat Akurat dari Kota Surakarta
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Arah kiblat dari Masjid Raya Sheikh Zayed Solo mengarah ke <strong>294.5° (Barat-Barat Laut)</strong> dengan jarak lurus sejauh <strong>± 8.398 kilometer</strong> menuju Ka'bah di Masjidil Haram, Makkah Al-Mukarramah.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-sky-100 dark:border-slate-700 shadow-sm">
+                            <span class="text-xs text-slate-500 block">Derajat Kiblat:</span>
+                            <span id="qibla-degree" class="text-lg font-bold text-sky-600 dark:text-sky-400 mt-1 block">294.5° WNW</span>
+                        </div>
+                        <div class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-sky-100 dark:border-slate-700 shadow-sm">
+                            <span class="text-xs text-slate-500 block">Jarak ke Ka'bah:</span>
+                            <span class="text-lg font-bold text-amber-600 dark:text-amber-400 mt-1 block">± 8.398 KM</span>
+                        </div>
+                    </div>
+
+                    <button onclick="testCompassRotation()" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>Uji Putaran Kompas</span>
+                    </button>
+                </div>
+
+                <!-- Visual Dial Kompas -->
+                <div class="bg-white dark:bg-navy-900 p-8 rounded-3xl shadow-xl border border-sky-100 dark:border-slate-800 text-center flex flex-col items-center justify-center">
+                    <div class="compass-container my-4">
+                        <div id="compass-dial" class="compass-dial flex items-center justify-center">
+                            <span class="absolute top-2 font-extrabold text-xs text-red-500">U</span>
+                            <span class="absolute right-2 font-extrabold text-xs text-slate-400">T</span>
+                            <span class="absolute bottom-2 font-extrabold text-xs text-slate-400">S</span>
+                            <span class="absolute left-2 font-extrabold text-xs text-slate-400">B</span>
+                        </div>
+                        <div id="qibla-needle" class="compass-needle">
+                            <div class="needle-qibla"></div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <i class="fa-solid fa-kaaba text-amber-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2">Jarun Hijau Mengarah ke Ka'bah (294.5°)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. PANDUAN WISATAWAN & TATA TERTIB KUNJUNGAN (DO'S & DON'TS) -->
+    <section id="etika" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                Panduan Kunjungan Sopan
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                Tata Tertib & Etika Pengunjung Masjid
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                Demi menjaga kesucian tempat ibadah dan kenyamanan bersama bagi jamaah maupun wisatawan religi.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Aturan 1: Busana -->
+            <div class="bg-white dark:bg-navy-900 p-6 rounded-3xl border border-sky-100 dark:border-slate-800 shadow-lg">
+                <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 rounded-2xl flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-shirt"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Busana Sopan & Menutup Aurat</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                    Wanita wajib mengenakan jilbab/kerudung dan busana tertutup tidak ketat. Pria wajib memakai celana panjang rapi.
+                </p>
+            </div>
+
+            <!-- Aturan 2: Batas Suci -->
+            <div class="bg-white dark:bg-navy-900 p-6 rounded-3xl border border-sky-100 dark:border-slate-800 shadow-lg">
+                <div class="w-12 h-12 bg-sky-100 dark:bg-sky-900/40 text-sky-600 rounded-2xl flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-shoe-prints"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Pelepasan Alas Kaki</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                    Lepas alas kaki sebelum menginjak batas suci pelataran dan ruang sholat. Tersedia rak penitipan sepatu/sandal gratis.
+                </p>
+            </div>
+
+            <!-- Aturan 3: Fotografi -->
+            <div class="bg-white dark:bg-navy-900 p-6 rounded-3xl border border-sky-100 dark:border-slate-800 shadow-lg">
+                <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/40 text-amber-600 rounded-2xl flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Etika Berfoto & Video</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                    Dilarang berfoto dengan pose berlebihan atau mengganggu kekhusyukan jamaah yang sedang sholat dan berdoa.
+                </p>
+            </div>
+
+            <!-- Aturan 4: Kebersihan -->
+            <div class="bg-white dark:bg-navy-900 p-6 rounded-3xl border border-sky-100 dark:border-slate-800 shadow-lg">
+                <div class="w-12 h-12 bg-rose-100 dark:bg-rose-900/40 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-4">
+                    <i class="fa-solid fa-ban-smoking"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Dilarang Merokok & Makanan</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                    Kawasan bebas asap rokok. Dilarang membawa makanan dan minuman berat ke dalam ruang utama ibadah.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. KALKULATOR ZAKAT & KOTAK INFAQ QRIS RESMI -->
+    <section id="zakat" class="py-24 bg-white dark:bg-navy-900 border-y border-sky-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                    Amal Jariyah & ZISWAF
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                    Kalkulator Zakat & Infaq Digital QRIS
+                </h2>
+                <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                    Salurkan zakat, infaq, dan sedekah terbaik Anda untuk kemaslahatan umat, operasional masjid, serta beasiswa anak yatim.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <!-- Tab Kalkulator Zakat -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 shadow-lg space-y-5">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-10 h-10 bg-sky-500 text-white rounded-xl flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Hitung Zakat Maal & Profesi</h3>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Jenis Zakat</label>
+                        <select id="zakat-type" class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <option value="profesi">Zakat Profesi / Penghasilan Bulanan</option>
+                            <option value="maal">Zakat Maal / Harta Tabungan 1 Tahun</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Total Penghasilan / Harta (Rupiah)</label>
+                        <input id="zakat-amount" type="number" placeholder="Contoh: 10000000" class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <span class="text-[11px] text-slate-500 mt-1 block">Nishab Bulanan: ± Rp 9.916.000 (Setara 85 gr Emas)</span>
+                    </div>
+
+                    <button onclick="calculateZakat()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                        Hitung Kewajiban Zakat
+                    </button>
+
+                    <!-- Box Hasil Zakat -->
+                    <div id="zakat-result-box" class="hidden p-5 rounded-2xl bg-white dark:bg-slate-900 border border-sky-200 dark:border-slate-700 space-y-2">
+                        <span id="zakat-status-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold"></span>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="text-xs text-slate-500">Jumlah Zakat Wajib (2.5%):</span>
+                            <span id="zakat-result-text" class="text-xl font-extrabold text-sky-600 dark:text-sky-400">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Infaq Digital QRIS -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 shadow-lg space-y-5">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="w-10 h-10 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Infaq Online QRIS Nasional</h3>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Pilih Nominal Infaq Cepat:</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="selectDonationPreset(10000, this)" class="qris-preset-btn bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-sky-500 transition">Rp 10.000</button>
+                            <button onclick="selectDonationPreset(25000, this)" class="qris-preset-btn bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-sky-500 transition">Rp 25.000</button>
+                            <button onclick="selectDonationPreset(50000, this)" class="qris-preset-btn bg-sky-500 text-white border-sky-500 py-2.5 rounded-xl text-xs font-bold border hover:border-sky-500 transition">Rp 50.000</button>
+                            <button onclick="selectDonationPreset(100000, this)" class="qris-preset-btn bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-sky-500 transition">Rp 100.000</button>
+                            <button onclick="selectDonationPreset(250000, this)" class="qris-preset-btn bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-sky-500 transition">Rp 250.000</button>
+                            <button onclick="selectDonationPreset(500000, this)" class="qris-preset-btn bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-sky-500 transition">Rp 500.000</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Donatur</label>
+                            <input id="donor-name" type="text" placeholder="Hamba Allah / Nama Anda" class="w-full px-4 py-2.5 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nominal Custom (Rp)</label>
+                            <input id="custom-infaq-input" type="number" oninput="updateCustomDonation(this.value)" placeholder="Nominal lain" class="w-full px-4 py-2.5 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        </div>
+                    </div>
+
+                    <!-- Kode QRIS & Tombol Donasi -->
+                    <div class="flex flex-col sm:flex-row items-center gap-5 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-sky-200 dark:border-slate-700">
+                        <div class="w-32 h-32 p-2 bg-white rounded-xl shadow-inner border border-slate-200 flex-shrink-0 flex items-center justify-center">
+                            <!-- SVG QR Code Visual -->
+                            <svg class="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="currentColor">
+                                <rect x="0" y="0" width="30" height="30" rx="4"/>
+                                <rect x="6" y="6" width="18" height="18" fill="white"/>
+                                <rect x="10" y="10" width="10" height="10"/>
+                                <rect x="70" y="0" width="30" height="30" rx="4"/>
+                                <rect x="76" y="6" width="18" height="18" fill="white"/>
+                                <rect x="80" y="10" width="10" height="10"/>
+                                <rect x="0" y="70" width="30" height="30" rx="4"/>
+                                <rect x="6" y="76" width="18" height="18" fill="white"/>
+                                <rect x="10" y="80" width="10" height="10"/>
+                                <rect x="40" y="10" width="10" height="10"/>
+                                <rect x="40" y="40" width="20" height="20"/>
+                                <rect x="70" y="40" width="10" height="10"/>
+                                <rect x="40" y="70" width="10" height="20"/>
+                                <rect x="60" y="70" width="20" height="10"/>
+                                <rect x="80" y="80" width="10" height="10"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-2 text-center sm:text-left flex-1">
+                            <span class="text-xs text-slate-500">Nominal Infaq Terpilih:</span>
+                            <h4 id="qris-amount-display" class="text-2xl font-extrabold text-sky-600 dark:text-sky-400">Rp 50.000</h4>
+                            <p class="text-[11px] text-slate-400">Scan via BCA, Mandiri, BRI, BSI, GoPay, OVO, ShopeePay & DANA.</p>
+                            <button onclick="processDonation()" class="gold-badge font-bold px-5 py-2.5 rounded-xl shadow transition text-xs w-full sm:w-auto">
+                                <i class="fa-solid fa-circle-check mr-1"></i> Konfirmasi & Cetak Bukti Infaq
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tempat Bukti Kwitansi Digital -->
+                    <div id="printable-receipt" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. LOKASI, JAM OPERASIONAL & PETA GOOGLE -->
+    <section id="lokasi" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                Akses & Panduan Rute
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                Lokasi & Jam Operasional Masjid
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                Terletak strategis di pusat Kota Surakarta dengan kemudahan akses transportasi kereta api, bus antarkota, dan Batik Solo Trans.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            <!-- Informasi Kunjungan & Transportasi -->
+            <div class="bg-white dark:bg-navy-900 p-8 rounded-3xl shadow-xl border border-sky-100 dark:border-slate-800 space-y-6 flex flex-col justify-between">
+                <div class="space-y-5">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-sky-500"></i> Alamat Lengkap
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mt-1.5 leading-relaxed">
+                            Jl. Cirebon No.12, Gilingan, Kec. Banjarsari, Kota Surakarta, Jawa Tengah 57134
+                        </p>
+                    </div>
+
+                    <hr class="border-sky-100 dark:border-slate-800">
+
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-sky-500"></i> Jam Operasional & Ibadah
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mt-1.5">
+                            <span class="font-bold text-slate-800 dark:text-white">Buka Setiap Hari:</span> 03.00 WIB s/d 21.00 WIB
+                        </p>
+                        <p class="text-xs text-slate-400 mt-1">Gerbang dibuka mulai jam 03.00 WIB untuk persiapan Sholat Tahajud dan Subuh berjamaah.</p>
+                    </div>
+
+                    <hr class="border-sky-100 dark:border-slate-800">
+
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-bus text-sky-500"></i> Akses Transportasi Publik
+                        </h3>
+                        <ul class="space-y-2 text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-train text-sky-500 mt-1"></i>
+                                <span><strong>Stasiun Solo Balapan:</strong> Hanya 5 menit (1.2 km).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-bus-simple text-sky-500 mt-1"></i>
+                                <span><strong>Terminal Tirtonadi:</strong> 800 meter dengan fasilitas Skybridge & Shuttle bus.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-van-shuttle text-sky-500 mt-1"></i>
+                                <span><strong>Batik Solo Trans (BST):</strong> Halte khusus Sheikh Zayed Koridor 1 & Feeder.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-sky-100 dark:border-slate-800 flex gap-3">
+                    <a href="https://maps.google.com/?q=Masjid+Raya+Sheikh+Zayed+Solo" target="_blank" rel="noopener noreferrer" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs px-5 py-3 rounded-xl transition shadow flex items-center gap-2">
+                        <i class="fa-solid fa-location-arrow"></i>
+                        <span>Buka Petunjuk Arah di Google Maps</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Google Maps Embed -->
+            <div class="bg-white dark:bg-navy-900 p-3 rounded-3xl shadow-xl border border-sky-100 dark:border-slate-800 min-h-[420px] flex">
+                <iframe 
+                    title="Peta Lokasi Masjid Raya Sheikh Zayed Solo"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.2057396639213!2d110.82515097499933!3d-7.552504892461321!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a175f0a28f801%3A0xb35a3fa3bbdfc836!2sMasjid%20Raya%20Sheikh%20Zayed%20Solo!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0; min-height:420px;" 
+                    class="rounded-2xl w-full" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 16. AGENDA & JADWAL KEGIATAN MASJID -->
+    <section id="kegiatan" class="py-24 bg-white dark:bg-navy-900 border-y border-sky-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                    Agenda Dakwah & Sosial
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                    Jadwal Kegiatan & Kajian Ilmiah
+                </h2>
+                <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                    Ikuti berbagai kegiatan keagamaan, sosial, dan kajian Islam moderat yang terbuka bebas bagi jamaah umum.
+                </p>
+            </div>
+
+            <!-- Filter Kategori Agenda -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="filter-container">
+                <button onclick="filterKegiatan('all', this)" class="filter-btn active bg-sky-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow transition">Semua Kegiatan</button>
+                <button onclick="filterKegiatan('kajian', this)" class="filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Kajian Rutin</button>
+                <button onclick="filterKegiatan('pendidikan', this)" class="filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Pendidikan & TPA</button>
+                <button onclick="filterKegiatan('sosial', this)" class="filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Sosial & Berbagi</button>
+            </div>
+
+            <!-- Kartu Agenda Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="kegiatan-grid">
+                <!-- Card 1: Kajian Tafsir -->
+                <div class="kegiatan-card bg-sky-50/50 dark:bg-slate-800/60 p-6 rounded-3xl border border-sky-100 dark:border-slate-700 flex flex-col justify-between shadow-sm" data-category="kajian">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 text-xs font-bold px-3 py-1 rounded-full">Kajian Rutin</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Ba'da Maghrib</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Kajian Tafsir Al-Qur'an Tematik</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                            Mendalami mukjizat Al-Qur'an bersama Guru Besar dan Ulama terkemuka setiap hari Selasa malam.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="border-t border-sky-100 dark:border-slate-700 pt-4 flex items-center justify-between text-xs text-slate-500 mb-3">
+                            <span><i class="fa-solid fa-location-dot mr-1 text-sky-500"></i> Ruang Utama Masjid</span>
+                            <span class="font-bold text-sky-600 dark:text-sky-400">Gratis / Terbuka</span>
+                        </div>
+                        <button onclick="registerEvent('Kajian Tafsir Al-Qur\'an')" class="w-full bg-white dark:bg-slate-900 hover:bg-sky-500 hover:text-white text-sky-600 dark:text-sky-300 text-xs font-bold py-2.5 rounded-xl border border-sky-200 dark:border-slate-700 transition">
+                            Ingatkan Saya / Ikuti
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: TPA Tahfidz -->
+                <div class="kegiatan-card bg-sky-50/50 dark:bg-slate-800/60 p-6 rounded-3xl border border-sky-100 dark:border-slate-700 flex flex-col justify-between shadow-sm" data-category="pendidikan">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold px-3 py-1 rounded-full">Pendidikan</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 16.00 WIB</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">TPA & Tahfidz Al-Qur'an Anak</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                            Program santri cilik belajar tahsin qiroati dan menghafal juz amma bersanad di Islamic Center.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="border-t border-sky-100 dark:border-slate-700 pt-4 flex items-center justify-between text-xs text-slate-500 mb-3">
+                            <span><i class="fa-solid fa-location-dot mr-1 text-emerald-500"></i> Gedung Islamic Center</span>
+                            <span class="font-bold text-emerald-600 dark:text-emerald-400">Terbuka Santri Baru</span>
+                        </div>
+                        <button onclick="registerEvent('Pendaftaran TPA Tahfidz')" class="w-full bg-white dark:bg-slate-900 hover:bg-emerald-600 hover:text-white text-emerald-600 dark:text-emerald-300 text-xs font-bold py-2.5 rounded-xl border border-emerald-200 dark:border-slate-700 transition">
+                            Daftarkan Anak
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Jumat Berkah -->
+                <div class="kegiatan-card bg-sky-50/50 dark:bg-slate-800/60 p-6 rounded-3xl border border-sky-100 dark:border-slate-700 flex flex-col justify-between shadow-sm" data-category="sosial">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-xs font-bold px-3 py-1 rounded-full">Sosial</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Ba'da Sholat Jumat</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Jumat Berkah & 2.000 Paket Makan</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed">
+                            Distribusi makanan bernutrisi dan santunan kepada dhuafa, musafir, serta jamaah sholat Jumat.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="border-t border-sky-100 dark:border-slate-700 pt-4 flex items-center justify-between text-xs text-slate-500 mb-3">
+                            <span><i class="fa-solid fa-location-dot mr-1 text-amber-500"></i> Halaman Selasar Sahn</span>
+                            <span class="font-bold text-amber-600 dark:text-amber-400">Terbuka Donasi</span>
+                        </div>
+                        <button onclick="registerEvent('Donasi Jumat Berkah')" class="w-full bg-white dark:bg-slate-900 hover:bg-amber-500 hover:text-white text-amber-600 dark:text-amber-300 text-xs font-bold py-2.5 rounded-xl border border-amber-200 dark:border-slate-700 transition">
+                            Salurkan Sedekah Jumat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 17. KUIS INTERAKTIF SAHABAT SHEIKH ZAYED (EDUKATIF & SERU) -->
+    <section id="kuis" class="py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-br from-sky-600 to-navy-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+                <i class="fa-solid fa-mosque"></i>
+            </div>
+            
+            <div class="relative z-10 text-center max-w-2xl mx-auto mb-10">
+                <span class="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider inline-block">
+                    Kuis Edukasi Wisatawan
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold mt-3">Kuis Jejak Sheikh Zayed Surakarta</h2>
+                <p class="text-slate-200 text-xs sm:text-sm mt-2">Uji wawasan Anda seputar kemegahan dan sejarah Masjid Sheikh Zayed Solo!</p>
+            </div>
+
+            <!-- Soal 1 -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 mb-6">
+                <p class="text-sm sm:text-base font-bold mb-4">1. Berapa jumlah kubah bergaya Timur Tengah di Masjid Raya Sheikh Zayed Surakarta?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="checkQuiz(1, 'A', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">A. 50 Kubah</button>
+                    <button onclick="checkQuiz(1, 'B', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">B. 82 Kubah (Benar)</button>
+                    <button onclick="checkQuiz(1, 'C', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">C. 99 Kubah</button>
+                </div>
+            </div>
+
+            <!-- Soal 2 -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 mb-6">
+                <p class="text-sm sm:text-base font-bold mb-4">2. Masjid Raya Sheikh Zayed Solo merupakan miniatur dari masjid agung di negara mana?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="checkQuiz(2, 'A', 'A', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">A. Uni Emirat Arab (Abu Dhabi)</button>
+                    <button onclick="checkQuiz(2, 'B', 'A', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">B. Arab Saudi (Madinah)</button>
+                    <button onclick="checkQuiz(2, 'C', 'A', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">C. Turki (Istanbul)</button>
+                </div>
+            </div>
+
+            <!-- Soal 3 -->
+            <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
+                <p class="text-sm sm:text-base font-bold mb-4">3. Motif kearifan lokal apa yang menghiasi karpet lembut di ruang sholat utama?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="checkQuiz(3, 'A', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">A. Songket Palembang</button>
+                    <button onclick="checkQuiz(3, 'B', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">B. Batik Khas Surakarta</button>
+                    <button onclick="checkQuiz(3, 'C', 'B', this)" class="bg-white/15 hover:bg-white/30 text-white font-semibold text-xs py-3 px-4 rounded-xl border border-white/20 transition">C. Tenun Ikat Sumba</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 18. GALERI DOKUMENTASI & LIGHTBOX PRO -->
+    <section id="galeri" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                Dokumentasi & Estetika
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-4">
+                Galeri Keindahan Masjid Sheikh Zayed
+            </h2>
+            <p class="text-slate-600 dark:text-slate-300 mt-3 text-sm sm:text-base">
+                Potret kemegahan interior, marmer putih, menara menjulang, serta pendar senja di Kota Solo.
+            </p>
+        </div>
+
+        <!-- Filter Galeri -->
+        <div class="flex flex-wrap justify-center gap-2 mb-10">
+            <button onclick="filterGaleri('all', this)" class="galeri-filter-btn bg-sky-500 text-white px-5 py-2 rounded-xl text-xs sm:text-sm font-bold shadow transition">Semua Foto</button>
+            <button onclick="filterGaleri('arsitektur', this)" class="galeri-filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Arsitektur</button>
+            <button onclick="filterGaleri('interior', this)" class="galeri-filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Interior & Batik</button>
+            <button onclick="filterGaleri('senja', this)" class="galeri-filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Suasana Senja</button>
+            <button onclick="filterGaleri('fasilitas', this)" class="galeri-filter-btn bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-sky-100 px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition">Islamic Center</button>
+        </div>
+
+        <!-- Grid Foto -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Item 1: Fasad Depan -->
+            <div class="galeri-item group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80" data-category="arsitektur" onclick="openLightboxByIndex(0)">
+                <img src="masjidepan.jpg" alt="Fasad Utama Sheikh Zayed" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <span class="gold-badge text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit mb-2">Arsitektur Utama</span>
+                    <h4 class="text-white font-bold text-base">Fasad Megah Marmer Putih Sheikh Zayed</h4>
+                    <p class="text-slate-300 text-xs mt-1">Sentuh untuk memperbesar & mengunduh foto</p>
+                </div>
+            </div>
+
+            <!-- Item 2: Eksterior Senja -->
+            <div class="galeri-item group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80" data-category="senja" onclick="openLightboxByIndex(1)">
+                <img src="eksteriormasjid.jpg" alt="Eksterior Senja" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <span class="gold-badge text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit mb-2">Suasana Senja</span>
+                    <h4 class="text-white font-bold text-base">Cahaya Senja Menyinari 82 Kubah</h4>
+                    <p class="text-slate-300 text-xs mt-1">Sentuh untuk memperbesar & mengunduh foto</p>
+                </div>
+            </div>
+
+            <!-- Item 3: Interior Batik -->
+            <div class="galeri-item group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80" data-category="interior" onclick="openLightboxByIndex(2)">
+                <img src="interiormasjid.jpg" alt="Interior Masjid" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <span class="gold-badge text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit mb-2">Ruang Sholat</span>
+                    <h4 class="text-white font-bold text-base">Karpet Motif Batik & Kaligrafi Emas</h4>
+                    <p class="text-slate-300 text-xs mt-1">Sentuh untuk memperbesar & mengunduh foto</p>
+                </div>
+            </div>
+
+            <!-- Item 4: Menara Putih -->
+            <div class="galeri-item group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80" data-category="arsitektur" onclick="openLightboxByIndex(3)">
+                <img src="masjid.jpg" alt="Menara Putih" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <span class="gold-badge text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit mb-2">Menara 75M</span>
+                    <h4 class="text-white font-bold text-base">Menara Putih Menembus Langit Surakarta</h4>
+                    <p class="text-slate-300 text-xs mt-1">Sentuh untuk memperbesar & mengunduh foto</p>
+                </div>
+            </div>
+
+            <!-- Item 5: Islamic Center -->
+            <div class="galeri-item group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer h-80" data-category="fasilitas" onclick="openLightboxByIndex(4)">
+                <img src="tentangmasjid.jpg" alt="Islamic Center" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-6">
+                    <span class="gold-badge text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit mb-2">Pusat Kebudayaan</span>
+                    <h4 class="text-white font-bold text-base">Kompleks Islamic Center Sheikh Zayed</h4>
+                    <p class="text-slate-300 text-xs mt-1">Sentuh untuk memperbesar & mengunduh foto</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 19. MODAL LIGHTBOX GALERI PRO (ZOOM, NEXT, PREV, DOWNLOAD) -->
+    <div id="imageModal" class="fixed inset-0 z-[9999] hidden bg-slate-950/90 flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="relative max-w-5xl w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-700 flex flex-col" onclick="event.stopPropagation()">
+            <!-- Top Bar Lightbox -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/70">
+                <div class="flex items-center space-x-3">
+                    <span id="modalCounter" class="text-xs font-mono font-bold bg-sky-500/20 text-sky-400 px-3 py-1 rounded-full border border-sky-400/30">1 / 5</span>
+                    <span class="text-xs text-slate-400 hidden sm:inline">Gunakan tombol panah keyboard (← / →) untuk beralih</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="downloadCurrentImage()" class="text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-download"></i> Unduh
+                    </button>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-9 h-9 rounded-xl flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Image Viewer Container -->
+            <div class="relative flex items-center justify-center bg-black/50 min-h-[50vh] max-h-[72vh] p-2">
+                <img id="modalImage" src="" alt="Zoomed Photo" class="max-h-[70vh] max-w-full object-contain rounded-xl select-none">
+                
+                <!-- Prev Button -->
+                <button onclick="prevLightboxImage()" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-sky-600 text-white flex items-center justify-center text-lg shadow-lg border border-white/20 transition">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <!-- Next Button -->
+                <button onclick="nextLightboxImage()" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-sky-600 text-white flex items-center justify-center text-lg shadow-lg border border-white/20 transition">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Caption Bar -->
+            <div class="p-5 bg-slate-950/80 text-center border-t border-slate-800">
+                <p id="modalCaption" class="text-slate-200 font-semibold text-sm sm:text-base"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 20. KONTAK & FORM ASPIRASI RESMI -->
+    <section id="kontak" class="py-24 bg-white dark:bg-navy-900 border-t border-sky-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="text-sky-600 dark:text-sky-400 font-bold uppercase tracking-wider text-xs bg-sky-100 dark:bg-sky-950/80 px-4 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+                        Layanan Jamaah & Humas
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                        Pusat Informasi & Layanan Aspirasi
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                        Sampaikan pertanyaan mengenai kunjungan rombongan bus, peminjaman kursi roda difabel, reservasi akad nikah, atau masukan untuk pengurus masjid.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-sky-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Telepon & WhatsApp Pengelola</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">+62 811-2902-666 (Senin - Ahad 08.00 - 17.00 WIB)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-sky-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm">Surel Resmi Sekretariat</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">sekretariat@masjidzayedsolo.or.id</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <a href="https://www.instagram.com/masjidzayedsolo?rpxt=b3g4ZGF3Z3RkbmZ6" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-4 group">
+                                <div class="w-12 h-12 bg-rose-100 dark:bg-slate-800 text-rose-600 dark:text-rose-400 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition">
+                                    <i class="fa-brands fa-instagram text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">Instagram Resmi</h4>
+                                    <p class="text-slate-600 dark:text-slate-400 text-xs group-hover:text-sky-600 transition">@masjidzayedsolo</p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <a href="https://youtube.com/@masjidzayedsolo?si=Q2qFukjYVN46E-_v" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-4 group">
+                                <div class="w-12 h-12 bg-red-100 dark:bg-slate-800 text-red-600 dark:text-red-400 rounded-2xl flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition">
+                                    <i class="fa-brands fa-youtube text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">Kanal YouTube Resmi</h4>
+                                    <p class="text-slate-600 dark:text-slate-400 text-xs group-hover:text-sky-600 transition">Masjid Raya Sheikh Zayed Solo</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Kontak & Aspirasi -->
+                <div class="bg-sky-50/50 dark:bg-slate-800/60 p-8 rounded-3xl border border-sky-100 dark:border-slate-700 shadow-xl">
+                    <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap *</label>
+                            <input type="text" required class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="Masukkan nama lengkap Anda">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Nomor WhatsApp / Email *</label>
+                            <input type="text" required class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="08xxxxxxxxxx atau email@anda.com">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Topik Kebutuhan</label>
+                            <select class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <option value="umum">Informasi Kunjungan Umum / Wisatawan</option>
+                                <option value="rombongan">Kunjungan Rombongan Bus / Majelis Taklim</option>
+                                <option value="difabel">Layanan Kursi Roda / Lansia Ramah Difabel</option>
+                                <option value="nikah">Permohonan Ijab Qobul / Akad Nikah</option>
+                                <option value="donasi">Layanan Zakat, Infaq & Shadaqah</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Isi Pesan / Masukan *</label>
+                            <textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-sky-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500" placeholder="Tuliskan pesan atau pertanyaan Anda dengan lengkap..."></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-sky-500/20 transition text-sm">
+                            Kirimkan Pesan Anda
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 21. FOOTER MEWAH DENGAN DOA & BRANDING -->
+    <footer class="bg-navy-950 text-slate-300 pt-16 pb-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
+                <!-- Kolom 1: Profil -->
+                <div class="space-y-4 md:col-span-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-sky-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
+                            <i class="fa-solid fa-mosque text-amber-200"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-lg text-white">Masjid Raya Sheikh Zayed</span>
+                            <span class="block text-xs text-sky-400 font-semibold tracking-wider uppercase">Kota Surakarta, Jawa Tengah</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-md">
+                        Simbol persaudaraan abadi Republik Indonesia dan Uni Emirat Arab. Menegakkan dakwah Islam rahmatan lil 'alamin dan nilai-nilai moderasi beragama dalam wadah kebinekaan.
+                    </p>
+                    <p class="font-arabic text-amber-300 text-lg">
+                        رَبَّنَا تَقَبَّلْ مِنَّا ۖ إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ
+                    </p>
+                </div>
+
+                <!-- Kolom 2: Tautan Cepat -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Navigasi Utama</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#beranda" class="hover:text-sky-400 transition">Beranda Utama</a></li>
+                        <li><a href="#sholat" class="hover:text-sky-400 transition">Jadwal Sholat Live</a></li>
+                        <li><a href="#jelajah" class="hover:text-sky-400 transition">Jelajah Virtual 3D</a></li>
+                        <li><a href="#fasilitas" class="hover:text-sky-400 transition">Fasilitas & Ramah Difabel</a></li>
+                        <li><a href="#zakat" class="hover:text-sky-400 transition">Kalkulator Zakat & QRIS</a></li>
+                        <li><a href="#galeri" class="hover:text-sky-400 transition">Galeri Dokumentasi</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Jam Kunjungan -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Jam Kunjungan</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li class="flex justify-between">
+                            <span>Buka Gerbang:</span>
+                            <span class="font-bold text-white">03.00 WIB</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Tutup Gerbang:</span>
+                            <span class="font-bold text-white">21.00 WIB</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Hari:</span>
+                            <span class="text-emerald-400 font-bold">Setiap Hari</span>
+                        </li>
+                    </ul>
+                    <div class="mt-4 pt-3 border-t border-slate-800">
+                        <span class="text-[11px] text-slate-400 block mb-2">Ikuti Kanal Media Sosial:</span>
+                        <div class="flex space-x-3 text-sm">
+                            <a href="https://www.instagram.com/masjidzayedsolo?rpxt=b3g4ZGF3Z3RkbmZ6" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="https://youtube.com/@masjidzayedsolo?si=Q2qFukjYVN46E-_v" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition"><i class="fa-brands fa-youtube"></i></a>
+                            <a href="https://maps.google.com/?q=Masjid+Raya+Sheikh+Zayed+Solo" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-sky-500 text-slate-300 hover:text-white flex items-center justify-center transition"><i class="fa-solid fa-map-pin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <p>&copy; 2026 Badan Pengelola Masjid Raya Sheikh Zayed Surakarta. All Rights Reserved.</p>
+                <p class="text-slate-400">Website Wisata Religi & Dakwah Digital Terdepan Kota Solo</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 22. FLOATING WIDGET: ASISTEN CERDAS "ZAYED AI" -->
+    <div id="chat-bubble-btn" onclick="toggleChatBot()" class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer group" title="Tanya Asisten Masjid Zayed">
+        <i class="fa-solid fa-comment-dots text-2xl group-hover:scale-110 transition"></i>
+        <span class="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 border-2 border-white rounded-full"></span>
+    </div>
+
+    <!-- Window Chatbot "Zayed AI" -->
+    <div id="chat-window" class="hidden bg-white dark:bg-navy-900 rounded-3xl shadow-2xl border border-sky-100 dark:border-slate-800 flex flex-col overflow-hidden">
+        <!-- Header Chatbot -->
+        <div class="bg-gradient-to-r from-sky-600 to-navy-900 p-4 text-white flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-mosque text-amber-300"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm leading-tight">Zayed AI Assistant</h4>
+                    <span class="text-[10px] text-emerald-300 flex items-center gap-1 font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span> Online 24 Jam
+                    </span>
+                </div>
+            </div>
+            <button onclick="toggleChatBot()" class="text-white/80 hover:text-white w-8 h-8 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Chat History -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs sm:text-sm">
+            <div class="chat-bubble-msg flex justify-start">
+                <div class="max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm bg-sky-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-none border border-sky-100 dark:border-slate-700">
+                    Assalamu'alaikum Warahmatullahi Wabarakatuh! Selamat datang di layanan asisten virtual Masjid Raya Sheikh Zayed Surakarta. Ada yang bisa saya bantu seputar jam buka, aturan pakaian, atau jadwal kajian?
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Question Chips -->
+        <div class="px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex gap-1.5 overflow-x-auto text-[11px] no-scrollbar">
+            <button onclick="askBotQuick('Jam buka masjid?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-sky-50 text-slate-700 dark:text-slate-200 font-semibold">🕒 Jam Buka</button>
+            <button onclick="askBotQuick('Aturan pakaian busana?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-sky-50 text-slate-700 dark:text-slate-200 font-semibold">👗 Pakaian</button>
+            <button onclick="askBotQuick('Fasilitas kursi roda difabel?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-sky-50 text-slate-700 dark:text-slate-200 font-semibold">♿ Kursi Roda</button>
+            <button onclick="askBotQuick('Lokasi parkir bus dan rute?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:bg-sky-50 text-slate-700 dark:text-slate-200 font-semibold">🚌 Parkir Bus</button>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="handleChatSubmit(event)" class="p-3 bg-white dark:bg-navy-900 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+            <input id="chat-input" type="text" placeholder="Ketik pertanyaan Anda..." class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- 23. TOMBOL BACK TO TOP -->
+    <button id="back-to-top" onclick="scrollToTop()" class="fixed bottom-24 right-6 z-40 bg-white dark:bg-slate-800 hover:bg-sky-500 hover:text-white text-slate-700 dark:text-slate-200 w-12 h-12 rounded-full shadow-xl flex items-center justify-center opacity-0 invisible transition-all duration-300 border border-slate-200 dark:border-slate-700" aria-label="Kembali ke atas">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Script JavaScript Interaktif Utama -->
+    <script src="script.js"></script>
+</body>
+</html>

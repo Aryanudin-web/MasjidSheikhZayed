@@ -1,0 +1,617 @@
+/* ==========================================================================
+   MASJID RAYA SHEIKH ZAYED SURAKARTA - STYLESHEET PRO LUXURY EDITION
+   Desain Arsitektur Islam Modern: Sentuhan Marmer Putih, Emas Mewah & Aksen Batik
+   ========================================================================== */
+
+/* ---------- 1. ROOT VARIABLES & GLOBAL SETUP ---------- */
+:root {
+    --primary: #0284c7;        /* Sky 600 */
+    --primary-light: #38bdf8;  /* Sky 400 */
+    --primary-dark: #0369a1;   /* Sky 700 */
+    --gold: #d4af37;           /* Islamic Gold */
+    --gold-light: #f3e5ab;     /* Light Gold */
+    --gold-dark: #996515;      /* Rich Deep Gold */
+    --gold-gradient: linear-gradient(135deg, #f59e0b, #d97706, #b45309);
+    --bg-light: #f0f9ff;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-arabic: 'Amiri', 'Traditional Arabic', serif;
+}
+
+.dark {
+    --bg-light: #060e1a;
+    --card-bg: #0c1a2e;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    overflow-x: hidden;
+}
+
+/* Custom Scrollbar Mewah */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #e2e8f0;
+}
+.dark ::-webkit-scrollbar-track {
+    background: #0b1523;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #0284c7, #d4af37);
+    border-radius: 6px;
+    border: 2px solid #f8fafc;
+}
+.dark ::-webkit-scrollbar-thumb {
+    border-color: #0b1523;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #0369a1, #b45309);
+}
+
+/* Selection Color */
+::selection {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+/* Font Kaligrafi Arab */
+.font-arabic {
+    font-family: var(--font-arabic);
+}
+
+/* Motif Geometris Islami (Arabesque Subtitle Pattern) */
+.islamic-pattern {
+    background-color: #ffffff;
+    background-image: radial-gradient(#0284c7 0.75px, transparent 0.75px), radial-gradient(#d4af37 0.75px, #ffffff 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    background-opacity: 0.05;
+}
+.dark .islamic-pattern {
+    background-color: #071120;
+    background-image: radial-gradient(#38bdf8 0.75px, transparent 0.75px), radial-gradient(#f59e0b 0.75px, #071120 0.75px);
+}
+
+/* ---------- 2. LOADER & PROGRESS BAR ---------- */
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: radial-gradient(circle at center, #0c1a2e 0%, #030812 100%);
+    color: #e0f2fe;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+}
+#loader.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.loader-ornament {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loader-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(56, 189, 248, 0.2);
+    border-top-color: #38bdf8;
+    border-right-color: #d4af37;
+    animation: spin 1.2s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+}
+.loader-icon {
+    font-size: 2rem;
+    color: #f8fafc;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulseGlow {
+    0%, 100% { transform: scale(1); opacity: 0.85; filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); }
+    50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 18px rgba(56,189,248,0.8)); }
+}
+
+#progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3.5px;
+    z-index: 1000;
+    background: linear-gradient(90deg, #0284c7, #38bdf8, #f59e0b, #d4af37);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.1s linear;
+}
+
+/* ---------- 3. HERO SECTION (PARALLAX MEWAH) ---------- */
+.hero {
+    position: relative;
+    height: 100vh;
+    min-height: 680px;
+    overflow: hidden;
+    background: #07101e;
+    color: #fff;
+    perspective: 1200px;
+}
+.hero-bg {
+    position: absolute;
+    inset: -6%;
+    width: 112%;
+    height: 112%;
+    object-fit: cover;
+    opacity: 0;
+    filter: brightness(0.85) contrast(1.05);
+    transition: opacity 1.6s ease 0.2s;
+    will-change: transform;
+}
+body.ready .hero-bg {
+    opacity: 0.88;
+}
+.hero-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 16, 30, 0.6) 0%, rgba(7, 16, 30, 0.2) 40%, rgba(7, 16, 30, 0.92) 100%);
+}
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    will-change: transform;
+    pointer-events: none;
+}
+.orb1 {
+    width: 380px;
+    height: 380px;
+    background: #0284c7;
+    top: 15%;
+    left: -8%;
+}
+.orb2 {
+    width: 320px;
+    height: 320px;
+    background: #d4af37;
+    bottom: 12%;
+    right: -5%;
+    opacity: 0.28;
+}
+.hero-title {
+    position: absolute;
+    top: 18vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    white-space: nowrap;
+    font-size: clamp(2.8rem, 10vw, 8.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.12);
+    text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    will-change: transform, opacity;
+    user-select: none;
+    pointer-events: none;
+}
+.hero-title .ch, .hero-title .sp {
+    display: inline-block;
+}
+.hero-title .sp {
+    width: 0.28em;
+}
+.hero-title .ch {
+    opacity: 0;
+    transform: translateY(80px) rotateX(-70deg);
+    transform-origin: bottom;
+}
+body.ready .hero-title .ch {
+    animation: letterIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: calc(0.8s + var(--i) * 0.05s);
+}
+@keyframes letterIn {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+.hero-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 9vh;
+    padding: 0 1.5rem;
+    max-width: 52rem;
+    margin: 0 auto;
+    text-align: center;
+    will-change: transform, opacity;
+    z-index: 10;
+}
+.rise {
+    opacity: 0;
+    transform: translateY(30px);
+}
+body.ready .rise {
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: calc(1.4s + var(--d, 0s));
+}
+@keyframes rise {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+.scroll-hint {
+    position: absolute;
+    bottom: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    z-index: 10;
+}
+.scroll-hint::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 4px;
+    height: 8px;
+    margin-left: -2px;
+    background: #d4af37;
+    border-radius: 2px;
+    animation: wheel 1.8s ease-in-out infinite;
+}
+@keyframes wheel {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(14px); }
+}
+
+/* ---------- 4. STAGE "JELAJAH" 3D SCROLL EXPERIENCE ---------- */
+.stage-wrap {
+    position: relative;
+    height: 380vh;
+    background: #040914;
+}
+.stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    perspective: 1400px;
+}
+.scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    will-change: transform, opacity;
+    display: flex;
+    align-items: center;
+}
+.scene img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform;
+    object-position: center 55%;
+    transform-origin: center 55%;
+}
+.scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(4, 9, 20, 0.94) 0%, rgba(4, 9, 20, 0.5) 50%, rgba(4, 9, 20, 0.2) 100%);
+}
+@media (max-width: 768px) {
+    .scene::after {
+        background: linear-gradient(180deg, rgba(4, 9, 20, 0.4) 0%, rgba(4, 9, 20, 0.95) 60%, rgba(4, 9, 20, 0.98) 100%);
+    }
+}
+.scene-text {
+    position: relative;
+    z-index: 3;
+    max-width: 34rem;
+    color: #fff;
+    padding: 0 max(1.5rem, 7vw);
+    will-change: transform, opacity;
+}
+.scene-text h2 {
+    font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin: 0.8rem 0;
+    background: linear-gradient(135deg, #ffffff 60%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.scene-text p {
+    color: #cbd5e1;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    backdrop-filter: blur(8px);
+}
+.dots {
+    position: absolute;
+    z-index: 10;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.dot.active {
+    background: #38bdf8;
+    transform: scale(1.6);
+    box-shadow: 0 0 12px #38bdf8;
+}
+
+/* ---------- 5. JADWAL SHOLAT WIDGET REAL-TIME ---------- */
+.prayer-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.prayer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px -5px rgba(2, 132, 199, 0.2);
+}
+.prayer-card.active {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 14px 30px -4px rgba(2, 132, 199, 0.45);
+    border-color: #38bdf8 !important;
+}
+.prayer-card.active h4,
+.prayer-card.active span,
+.prayer-card.active i {
+    color: #ffffff !important;
+}
+.prayer-card.active::before {
+    content: "SEKARANG";
+    position: absolute;
+    top: 6px;
+    right: -24px;
+    transform: rotate(45deg);
+    background: #d4af37;
+    color: #000;
+    font-size: 0.55rem;
+    font-weight: 800;
+    padding: 2px 24px;
+    letter-spacing: 0.08em;
+}
+
+/* ---------- 6. KOMPAS KIBLAT INTERAKTIF ---------- */
+.compass-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.compass-dial {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px dashed rgba(2, 132, 199, 0.3);
+    transition: transform 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+.compass-needle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 150px;
+    margin-left: -3px;
+    margin-top: -75px;
+    transform-origin: 50% 50%;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.needle-north {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 70px solid #ef4444;
+}
+.needle-qibla {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 70px solid #10b981;
+}
+
+/* ---------- 7. REVEAL 3D SAAT SCROLL ---------- */
+.reveal {
+    opacity: 0;
+    transform: perspective(900px) translate3d(0, 50px, -60px) rotateX(15deg);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+    transition-delay: var(--d, 0s) !important;
+}
+.reveal.from-l {
+    transform: perspective(900px) translate3d(-70px, 0, -60px) rotateY(15deg);
+}
+.reveal.from-r {
+    transform: perspective(900px) translate3d(70px, 0, -60px) rotateY(-15deg);
+}
+.reveal.in {
+    opacity: 1;
+    transform: none;
+}
+.tilt {
+    will-change: transform;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+}
+.parallax-img {
+    transform: scale(1.15);
+    will-change: transform;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ---------- 8. ASISTEN CERDAS "ZAYED AI" CHATBOT ---------- */
+#chat-bubble-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 45;
+    box-shadow: 0 10px 25px -4px rgba(2, 132, 199, 0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#chat-bubble-btn:hover {
+    transform: scale(1.08) rotate(3deg);
+}
+#chat-window {
+    position: fixed;
+    bottom: 90px;
+    right: 24px;
+    width: 370px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    z-index: 50;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: bottom right;
+}
+#chat-window.hidden {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+    pointer-events: none;
+    display: none;
+}
+.chat-bubble-msg {
+    animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes popIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+}
+
+/* ---------- 9. AUDIO PLAYER SOUND WAVE ANIMATION ---------- */
+.sound-wave {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    height: 16px;
+}
+.sound-bar {
+    width: 3px;
+    height: 100%;
+    background: #0284c7;
+    border-radius: 2px;
+    animation: waveBounce 1.2s ease-in-out infinite;
+}
+.sound-bar:nth-child(2) { animation-delay: 0.2s; height: 75%; }
+.sound-bar:nth-child(3) { animation-delay: 0.4s; height: 50%; }
+.sound-bar:nth-child(4) { animation-delay: 0.1s; height: 90%; }
+@keyframes waveBounce {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+}
+.audio-muted .sound-bar {
+    animation: none;
+    height: 3px !important;
+    background: #94a3b8;
+}
+
+/* ---------- 10. LIGHTBOX GALERI PRO ---------- */
+#imageModal {
+    backdrop-filter: blur(12px);
+    transition: opacity 0.3s ease;
+}
+
+/* ---------- 11. KUBAH / ARCH SHAPED DECORATIONS ---------- */
+.dome-arch {
+    border-radius: 90px 90px 16px 16px;
+}
+.gold-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+}
+
+/* ---------- 12. TOAST NOTIFICATION ---------- */
+#toast {
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    z-index: 9999;
+    min-width: 300px;
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#toast.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Print Stylesheet untuk Kwitansi Infaq */
+@media print {
+    body * { visibility: hidden; }
+    #printable-receipt, #printable-receipt * { visibility: visible; }
+    #printable-receipt { position: absolute; left: 0; top: 0; width: 100%; }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none !important; }
+    .hero-title .ch, .rise { opacity: 1; transform: none; animation: none !important; }
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
